@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>织影 · Android 版下载</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+    :root {
+      --bg:        #FAF5F5;
+      --bg2:       #F3ECEC;
+      --card:      #FFFFFF;
+      --accent:    #C9969F;
+      --accent-dk: #A87880;
+      --accent-bg: #F5E8EA;
+      --text:      #3D2B2E;
+      --text2:     #7A5C60;
+      --muted:     #B89FA2;
+      --border:    #EAE0E1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      padding: 0 24px 60px;
+    }
+
+    /* ── header ── */
+    .header {
+      padding: 56px 0 40px;
+      text-align: center;
+    }
+
+    .app-icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #E8D0D3, #C9969F);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(201,150,159,0.28);
+    }
+
+    .app-icon svg {
+      width: 48px;
+      height: 48px;
+      color: #fff;
+    }
+
+    .app-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+
+    .app-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── download card ── */
+    .dl-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 2px 20px rgba(61,43,46,0.06);
+      margin-bottom: 16px;
+    }
+
+    .dl-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dk));
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.18s, transform 0.18s;
+      box-shadow: 0 4px 16px rgba(201,150,159,0.35);
+    }
+
+    .dl-btn:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+
+    .dl-btn svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .dl-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .dl-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── install steps ── */
+    .steps-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .step:last-child { margin-bottom: 0; }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-bg);
+      color: var(--accent-dk);
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .step-text em {
+      font-style: normal;
+      color: var(--accent-dk);
+      font-weight: 500;
+    }
+
+    /* ── notice ── */
+    .notice {
+      background: var(--accent-bg);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .notice strong {
+      color: var(--accent-dk);
+      font-weight: 500;
+    }
+
+    /* ── divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* ── footer ── */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 8px;
+      line-height: 1.8;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ── fade in ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header  { animation: fadeUp 0.5s ease both; }
+    .dl-card { animation: fadeUp 0.5s 0.1s ease both; }
+    .notice  { animation: fadeUp 0.5s 0.2s ease both; }
+    .footer  { animation: fadeUp 0.5s 0.3s ease both; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="app-icon">
+      <!-- yarn ball icon -->
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="18" stroke="white" stroke-width="2.5" fill="none"/>
+        <path d="M8 20 Q16 14 24 24 Q32 34 40 28" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M10 28 Q18 20 26 28 Q34 36 42 24" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <path d="M14 16 Q20 24 28 18" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+        <line x1="32" y1="10" x2="38" y2="6" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="35" y1="8" x2="40" y2="12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="app-name">织影</div>
+    <div class="app-sub">针级计数 · 解放双手</div>
+  </div>
+
+  <div class="dl-card">
+    <a class="dl-btn" href="./download/stitchecho-android-latest.apk" download>
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 3v13M7 11l5 5 5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 20h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      下载 Android 版
+    </a>
+    <div class="dl-meta">
+      <span>测试版 · Beta</span>
+      <span>Android 10+</span>
+      <span>约 5 MB</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="steps-title">安装步骤</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">点击上方按钮下载 APK 文件</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">打开下载的文件，若弹出安全提示，点击<em>「仍要安装」</em>或<em>「允许此来源」</em></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">安装完成，打开织影开始钩织</div>
+    </div>
+  </div>
+
+  <div class="notice">
+    <strong>华为 / 荣耀用户请注意</strong><br>
+    鸿蒙 OS（HarmonyOS NEXT）暂不支持此安装包，Android 版仅适用于小米、OPPO、vivo、一加、三星等标准 Android 系统设备。
+  </div>
+
+  <div class="notice" style="background:var(--bg2);">
+    <strong>关于 Android 版</strong><br><br>
+    这是专门提供给 Android 用户的免费体验版，包含核心计数功能，不含 iOS 端的内购功能（语音高级模式、iCloud 备份、统计详情等）。<br><br>
+    由于学业精力有限，除重大 bug 修复外暂不做功能同步更新，更新方向以 iOS 端为主，敬请理解。<br><br>
+    如果你有 iOS 设备，欢迎在 App Store 体验功能完整的织影。<br><br>
+    <strong>希望在安卓上体验完整版的用户</strong>，欢迎在小红书安卓下载页的置顶评论留言，上架应用商店需要较长时间准备，非常感谢你的等待和支持 🧶
+  </div>
+
+  <div class="footer">
+    <a href="https://apps.apple.com/app/id6770457667">iOS 版 · App Store</a>
+    <br><br>
+    © 织影 StitchEcho · Android 免费体验版
+  </div>
+
+</div>
+</body>
+</html>
