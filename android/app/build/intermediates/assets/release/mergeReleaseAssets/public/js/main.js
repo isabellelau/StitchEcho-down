@@ -476,7 +476,7 @@ function onboardNext() {
     console.log('[onboard] offset:', offset);
     slides.style.transform = `translate3d(${offset}, 0, 0)`;
     slides.style.webkitTransform = `translate3d(${offset}, 0, 0)`;
-    slides.style.left = offset;
+    // removed
     console.log('[onboard] styles set');
   }
 
