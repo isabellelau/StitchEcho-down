@@ -1,0 +1,17 @@
+{
+	"appId": "com.stitchecho.knit",
+	"appName": "织影",
+	"webDir": "www",
+	"server": {
+		"iosScheme": "stitchecho"
+	},
+	"ios": {
+		"contentInset": "never",
+		"backgroundColor": "#FAF5F5"
+	},
+	"plugins": {
+		"CapacitorHttp": {
+			"enabled": false
+		}
+	}
+}

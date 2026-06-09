@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>织影</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#C07A45">
+  <meta name="version" content="1.140">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+</head>
+
+<body>
+
+  <div id="onboarding" class="onboarding">
+    <div class="onboard-slides" id="onboard-slides">
+
+      <!-- 卡片 1：项目管理 -->
+      <div class="onboard-slide">
+        <div class="onboard-visual">
+          <div class="onboard-mock-list">
+            <div class="onboard-mock-card">
+              <div class="onboard-mock-thumb" style="background:#EAD8DA"></div>
+              <div class="onboard-mock-lines">
+                <div class="onboard-mock-line onboard-mock-line--title"></div>
+                <div class="onboard-mock-line onboard-mock-line--sub"></div>
+              </div>
+            </div>
+            <div class="onboard-mock-card">
+              <div class="onboard-mock-thumb" style="background:#D8D0DA"></div>
+              <div class="onboard-mock-lines">
+                <div class="onboard-mock-line onboard-mock-line--title"></div>
+                <div class="onboard-mock-line onboard-mock-line--sub"></div>
+              </div>
+            </div>
+            <div class="onboard-mock-card">
+              <div class="onboard-mock-thumb" style="background:#D3D9D1"></div>
+              <div class="onboard-mock-lines">
+                <div class="onboard-mock-line onboard-mock-line--title"></div>
+                <div class="onboard-mock-line onboard-mock-line--sub"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="onboard-text">
+          <h2 class="onboard-title">为每件作品建立项目</h2>
+          <p class="onboard-desc">围巾、毛衣、袜子……每个作品独立记录，支持封面图片和多个部件分区管理</p>
+        </div>
+      </div>
+
+      <!-- 卡片 2：智能计数 -->
+      <div class="onboard-slide">
+        <div class="onboard-visual">
+          <div class="onboard-mock-seq">
+            <div class="onboard-mock-pill" style="background:#EAD8DA;color:#7A5860">X</div>
+            <div class="onboard-mock-pill" style="background:#D8D0DA;color:#5C4870">V</div>
+            <div class="onboard-mock-pill" style="background:#D3D9D1;color:#3D5445">A</div>
+            <div class="onboard-mock-pill" style="background:#EAD8DA;color:#7A5860">X</div>
+            <div class="onboard-mock-pill" style="background:#E6D7CF;color:#6B4F3A">F</div>
+            <div class="onboard-mock-pill" style="background:#D8D0DA;color:#5C4870">V</div>
+          </div>
+          <div class="onboard-mock-count">已记录 24 针</div>
+        </div>
+        <div class="onboard-text">
+          <h2 class="onboard-title">精准记录每一针</h2>
+          <p class="onboard-desc">按圈记录针法序列，针数自动统计，支持图解导入和 OCR 文字识别</p>
+        </div>
+      </div>
+
+      <!-- 卡片 3：开始 -->
+      <div class="onboard-slide">
+        <div class="onboard-visual">
+          <div class="onboard-app-icon">
+            <div class="onboard-icon-inner">🧶</div>
+          </div>
+          <div class="onboard-app-name">织影</div>
+        </div>
+        <div class="onboard-text">
+          <h2 class="onboard-title">开始你的第一个项目</h2>
+          <p class="onboard-desc">一切准备就绪，马上开始记录你的钩织作品</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="onboard-footer">
+      <div class="onboard-dots" id="onboard-dots">
+        <span class="onboard-dot onboard-dot--active"></span>
+        <span class="onboard-dot"></span>
+        <span class="onboard-dot"></span>
+      </div>
+      <button class="onboard-btn" id="onboard-btn" onclick="onboardNext()">下一步</button>
+    </div>
+  </div>
+  <script>if(localStorage.getItem('knit_onboarded_v1'))document.getElementById('onboarding').classList.add('done');</script>
+
+  <!-- Header -->
+  <header class="nav-bar" id="nav-bar">
+    <button class="nav-back" id="nav-back" onclick="goHome()">
+      <span class="nav-back-arrow">‹</span>
+      <span class="nav-back-label">返回</span>
+    </button>
+    <span class="nav-small-title" id="nav-small-title"></span>
+    <div class="nav-actions" id="nav-actions"></div>
+  </header>
+
+  <!-- Main screen -->
+  <div id="screen">
+    <div class="large-title-wrap" id="large-title-wrap">
+      <h1 class="large-title-text" id="large-title-text"></h1>
+      <p class="large-title-sub" id="large-title-sub"></p>
+    </div>
+    <div id="screen-content"></div>
+  </div>
+
+  <!-- Bottom palette -->
+  <div class="bottom-bar" id="bottom-bar" style="display:none"></div>
+
+  <!-- Tab Navigation -->
+  <div id="tab-nav">
+    <button class="tab-btn" id="tab-projects" onclick="switchTab('projects')">
+      <span class="tab-icon">⊞</span>
+    </button>
+    <div class="tab-notch"></div>
+    <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')">
+      <span class="tab-icon">⚙︎</span>
+    </button>
+  </div>
+
+  <button id="home-fab" onclick="showNewProjectDialog()" style="display:none">＋</button>
+
+  <!-- Overlay + action sheet -->
+  <div class="overlay" id="overlay" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet"></div>
+
+  <!-- Global loading mask -->
+  <div class="loading-mask" id="loading-mask">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">正在加载...</div>
+  </div>
+
+  <!-- New project dialog -->
+  <div class="dialog" id="dialog">
+    <div class="dialog-box">
+      <div class="dialog-title" id="dlg-title">新建项目</div>
+      <p class="dialog-msg" id="dlg-msg" style="display:none"></p>
+      <input class="dialog-input" id="dlg-input" placeholder="项目名称，例如：粉色帽子" maxlength="30">
+      <div class="dialog-row">
+        <button class="dialog-btn" onclick="closeDialog()">取消</button>
+        <button class="dialog-btn ok" onclick="confirmDialog()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice edge glow overlay -->
+  <div id="edge-glow" style="
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    border-radius: 0;
+    transition: opacity 0.08s ease-in;
+    box-shadow: inset 0 0 0 8px transparent;
+  "></div>
+
+  <!-- Voice breathing indicator -->
+  <div id="voice-pulse" style="
+    position: fixed;
+    right: 16px;
+    bottom: calc(var(--bottom-bar-h, 160px) + 16px);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #EF4444;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.3s;
+    box-shadow: 0 0 0 4px rgba(239,68,68,0.2);
+  "></div>
+
+  <script type="module" src="./js/main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then((reg) => {
+        // 检测新版本并提示刷新
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('[SW] 新版本已安装，请刷新页面');
+              if (window.showToast) {
+                showToast(t('sw_update_ready'), { label: t('sw_update_refresh'), onClick: () => location.reload() }, 8000);
+              }
+            }
+          });
+        });
+      }).catch((err) => {
+        console.warn('SW 注册失败:', err);
+      });
+
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (e.data?.type === 'SW_UPDATED') {
+          showUpdateToast();
+        }
+      });
+    }
+  </script>
+  <script>
+    function showUpdateToast() {
+      if (document.getElementById('update-toast')) return;
+
+      const el = document.createElement('div');
+      el.id = 'update-toast';
+      el.style.cssText = `
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: var(--accent);
+        color: #fff;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 9999;
+        safe-area: env(safe-area-inset-top);
+      `;
+      el.innerHTML = `
+        <span>${t('sw_update_found')}</span>
+        <button onclick="location.reload()" style="
+          background: #fff;
+          color: var(--accent);
+          border: none;
+          border-radius: 6px;
+          padding: 4px 12px;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          font-family: inherit;
+        ">${t('sw_update_refresh')}</button>
+      `;
+      document.body.prepend(el);
+    }
+
+  </script>
+</body>
+
+</html>
